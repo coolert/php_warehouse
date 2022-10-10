@@ -77,15 +77,15 @@ class MutiCurl
     }
 
     /**
-     * start running
+     * Start running.
      */
     public function run() {
         $this->initPool();
         $this->runCurl();
     }
 
-    /*
-     * run multi curl
+    /**
+     * Run multi curl.
      */
     private function runCurl() {
         do{
@@ -139,8 +139,10 @@ class MutiCurl
         }while($this->runningSig);
     }
 
-    /*
-     * init multi curl pool
+    /**
+     * Init multi curl pool.
+     *
+     * @throws Exception
      */
     private function initPool() {
         if(count($this->targets) < $this->threads) $this->threads = count($this->targets);
@@ -173,6 +175,13 @@ class MutiCurl
         $this->log("init pool done");
     }
 
+    /**
+     * Log.
+     *
+     * @param $log
+     *
+     * @return false|void
+     */
     private function log($log) {
         if(!$this->debug) return false;
         ob_start();
