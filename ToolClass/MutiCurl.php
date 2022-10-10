@@ -40,19 +40,43 @@ class MutiCurl
         };
     }
 
-    public function setTargets($urls) {
-        $this->targets = $urls;
+    /**
+     * Set request urls.
+     *
+     * @param $targets
+     *
+     * @return $this
+     */
+    public function setTargets($targets) {
+        $this->targets = $targets;
         return $this;
     }
+
+    /**
+     * Set thread pool capacity.
+     *
+     * @param $threads
+     *
+     * @return $this
+     */
     public function setThreads($threads) {
         $this->threads = intval($threads);
         return $this;
     }
+
+    /**
+     * Set callback which is used to solve the response.
+     *
+     * @param $func
+     *
+     * @return $this
+     */
     public function setCallback($func) {
         $this->callback = $func;
         return $this;
     }
-    /*
+
+    /**
      * start running
      */
     public function run() {
@@ -122,8 +146,26 @@ class MutiCurl
         if(count($this->targets) < $this->threads) $this->threads = count($this->targets);
         //init curl handler pool ...
         for($i=1;$i<=$this->threads;$i++) {
-            $task = curl_init(array_pop($this->targets));
-            curl_setopt_array($task, $this->curlOpt);
+            $target = array_pop($this->targets);
+            if (!in_array($target['method'], ['GET', 'POST'])) {
+                throw new Exception('Wrong request mode');
+            }
+            $set_opt = [
+                CURLOPT_CUSTOMREQUEST => $target['method'],
+                CURLOPT_URL => $target['url'],
+            ];
+            if (isset($target['head'])) {
+                $set_opt[CURLOPT_HTTPHEADER] = $target['head'];
+            }
+            if ($target['method'] == 'POST') {
+                if (isset($target['param'])) {
+                    $set_opt[CURLOPT_POSTFIELDS] = json_encode($target['param']);
+                    $set_opt[CURLOPT_POST] = 1;
+                }
+            }
+            $task = curl_init();
+            $opt = array_merge($this->curlOpt, $set_opt);
+            curl_setopt_array($task, $opt);
             curl_multi_add_handle($this->mh, $task);
             $this->log("init pool thread one");
             unset($task);
