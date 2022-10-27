@@ -166,7 +166,7 @@ class MutiCurl
                 }
             }
             $task = curl_init();
-            $opt = array_merge($this->curlOpt, $set_opt);
+            $opt = $this->curlOpt + $set_opt;
             curl_setopt_array($task, $opt);
             curl_multi_add_handle($this->mh, $task);
             $this->log("init pool thread one");

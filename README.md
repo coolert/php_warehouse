@@ -12,16 +12,18 @@
   $muti_curl = new MutiCurl();
   //请求参数
   $target = [
-                //请求头信息
-                'head' => ['Content-Type:application/json'],
-                //请求方式
-                'method' => 'POST',
-                //请求地址
-                'url' => 'http://www.example.com/',
-                //post提交参数
-                'param' => [
-                    'type' => 1,
-                ],
+                [
+                    //请求头信息
+                    'head' => ['Content-Type:application/json'],
+                    //请求方式
+                    'method' => 'POST',
+                    //请求地址
+                    'url' => 'http://www.example.com/',
+                    //post提交参数
+                    'param' => [
+                        'type' => 1,
+                    ],
+                ] 
             ];
   //回调函数
   $callback = function ($response) {
@@ -30,6 +32,6 @@
   };
   //线程池数量
   $threads = 10;
-  $muti_curl->setTargets($target)->setThreads($threads)->setCallback($callback);
+  $muti_curl->setTargets($target)->setThreads($threads)->setCallback($callback)->run();
   ```
 
