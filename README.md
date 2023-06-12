@@ -34,4 +34,10 @@
   $threads = 10;
   $muti_curl->setTargets($target)->setThreads($threads)->setCallback($callback)->run();
   ```
+  
+- api速率限制
+ 
+  漏桶法 : LeakyBucketController 
+
+  令牌桶法 : TokenBucketController
 
